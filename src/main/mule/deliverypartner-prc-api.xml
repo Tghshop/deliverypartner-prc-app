@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+      <flow name="deliverypartner-prc-api-main">
+        <http:listener config-ref="deliverypartner-prc-api-http-listener-config" path="/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="deliverypartner-prc-api-config" />
+    </flow>
+    <flow name="put:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config">
+        <json-logger:logger doc:name="log-put-deliverypartner-details-start" doc:id="ae74ccc8-f66b-480b-bb83-84d8b4e5b250" config-ref="json-logger-config" message='#["-------------" ++ upper("log-put-deliverypartner-details-start") ++ "-----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="aad23532-43ae-404a-8459-b008f06c05e7" name="set-request-params-sub-flow" target="requestParams" />
+        <flow-ref doc:name="put-deliverypartner-sub-flow" doc:id="1f207bab-600e-4fb1-8147-f5eee6b6e79b" name="put-deliverypartner-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-put-deliverypartner-details-end" doc:id="c3b3b57c-8963-4bc8-ace1-b9faae3fb723" config-ref="json-logger-config" message='#["-------------" ++ upper("log-put-deliverypartner-details-end") ++ "-----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="delete:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config">
+        <json-logger:logger doc:name="log-delete-deliverypartner-start" doc:id="dd686fb4-6fae-44b1-a456-a6d7606c84e6" config-ref="json-logger-config" message='#["-------------" ++ upper("log-delete-deliverypartner-start") ++ "-----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="de9fd759-980b-43ce-a96e-54bd75f8a407" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="delete-deliverypartner-sub-flow" doc:id="7fbd25c6-eabb-4fed-8e3c-3753ef0648eb" name="delete-deliverypartner-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+                <ee:set-variable variableName="partnerId"><![CDATA[attributes.uriParams.'partnerId']]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<json-logger:logger doc:name="log-delete-deliverypartner-end" doc:id="c575f2c1-3df0-4918-8dcf-1a1393114d5e" config-ref="json-logger-config" message='#["-------------" ++ upper("log-delete-deliverypartner-end") ++ "-----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="get:\api\v1\deliveryPartners:deliverypartner-prc-api-config">
+        <json-logger:logger doc:name="log-get-deliverypartners-data-start" doc:id="a8c66240-ecd4-4b0a-869d-f7d48e3581ba" config-ref="json-logger-config" message='#["-----------" ++ upper("log-get-deliverypartners-data-start") ++"-----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="510c6f0c-3877-49d6-ab62-add8e996bee1" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="get-deliverypartners-data-sub-flow" doc:id="c40329da-0e4a-4f98-98d6-5ac768262690" name="get-deliverypartners-data-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-get-deliverypartners-data-end" doc:id="88461c7f-a124-46af-86f9-f1090f3b34e3" config-ref="json-logger-config" message='#["-----------" ++ upper("log-get-deliverypartners-data-end") ++"-----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="get:\api\v1\deliveryPartners\(partnerId)\orders:deliverypartner-prc-api-config">
+		<json-logger:logger doc:name="log-get-deliverypatner-orders-start" doc:id="462609cc-e3cc-4fa4-91a1-7232063abecc" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-deliverypatner-orders-start") ++ "---------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="3903be6e-baa2-4dfe-9267-e3b3e71e55cd" name="set-request-params-sub-flow" target="requestParams" />
+        <flow-ref doc:name="get-deliverypartner-byid-sub-flow" doc:id="65713905-c2b9-407e-81f4-a4a7eb2b4dee" name="get-deliverypartner-byid-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-get-deliverypatner-orders-end" doc:id="852c4819-f19d-4403-b169-d6ff7997c3bd" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-deliverypatner-orders-end") ++ "---------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="get:\api\v1\deliveryPartners\(partnerId):deliverypartner-prc-api-config">
+        <json-logger:logger doc:name="log-get-deliverypatner-details-start" doc:id="99207b92-af59-4d1b-8761-0c9dd386312f" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-deliverypatner-details-start") ++ "---------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="1f84c4d1-c1a2-4d01-89b2-d3890ba6fe6f" name="set-request-params-sub-flow" target="requestParams" />
+        <flow-ref doc:name="get-deliverypartner-byid-sub-flow" doc:id="4faf5dcd-2714-4ecf-9b8b-439abe185b5f" name="get-deliverypartner-byid-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-get-deliverypatner-details-end" doc:id="d27a0a14-20e1-4a45-bc1d-fe9f8a59ae98" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-deliverypatner-details-end") ++ "---------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="post:\api\v1\deliveryPartners:application\json:deliverypartner-prc-api-config">
+        <json-logger:logger doc:name="log-post-deliverypartner-details-start" doc:id="a7de1a06-2c5a-427e-a516-33eafeaa4997" config-ref="json-logger-config" message='#["-------------" ++ upper("log-post-deliverypartner-details-start") ++ "-----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="cf5afa48-0624-4017-827b-c98de0798e0a" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="post-deliverypartner-sub-flow" doc:id="b6667d5a-9907-494a-aea1-540296f612fa" name="post-deliverypartner-sub-flow" />
+		<ee:transform doc:name="response-payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-post-deliverypartner-details-end" doc:id="6fe56ab2-8172-4538-8ede-fbdbb048f971" config-ref="json-logger-config" message='#["-------------" ++ upper("log-post-deliverypartner-details-end") ++ "-----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+</mule>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<configuration doc:name="Configuration" doc:id="78339e54-66cb-4e8a-a567-0a0b865d3507" defaultErrorHandler-ref="global-error-handler" />
+	<http:listener-config name="deliverypartner-prc-api-http-listener-config">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="deliverypartner-prc-api-config" api="deliverypartner-prc-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<json-logger:config name="json-logger-config" doc:name="JSON Logger Config" doc:id="11affd0a-a7a7-4c32-b5e6-c26c68d37ebd" applicationName="${app.name}" applicationVersion="${app.version}" environment="${mule.env}" />
+	<configuration-properties doc:name="Configuration properties" doc:id="1ecf0ff7-7ff5-47a5-a1b6-c942d53f5151" file="config\sb-properties.yaml" />
+	<http:request-config name="sf-http-request_configuration" doc:name="HTTP Request configuration" doc:id="0844174e-2edf-4a38-8378-246cfb6f9275" basePath="${httpRequester.sys-api.base-path}">
+		<http:request-connection protocol="HTTPS" host="${httpRequester.sys-api.host}" port="${httpRequester.sys-api.port}" connectionIdleTimeout="${httpRequester.sys-api.timeout}"/>
+	</http:request-config>
+	<http:request-config name="mail-http-request_configuration" doc:name="HTTP Request configuration" doc:id="820a215b-b481-4dbc-ae73-d969820d1f7f" basePath="${httpRequester.mail-api.base-path}" >
+		<http:request-connection host="${httpRequester.mail-api.host}" port="${httpRequester.mail-api.port}" connectionIdleTimeout="${httpRequester.mail-api.timeout}" protocol="HTTPS"/>
+	</http:request-config>
+	<api-gateway:autodiscovery apiId="20616919" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="69a2d0b5-b722-4d8e-9acb-5f56a0dc3bd8" flowRef="deliverypartner-prc-api-main" />
+	<error-handler name="global-error-handler" doc:id="6a291f11-acfc-42fc-a351-759992438a9a" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="on-error-propagate" doc:id="66238742-4532-4f73-8708-1b1b2b1812a1" type="ANY" >
+			<ee:transform doc:name="prepare-error-payload" doc:id="0955688a-1553-4113-99aa-19f7d43cbb9b" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": 500,
+	"errorMessage": error.description,
+	"errorPayloadContent": error.errorMessage.payload,
+	"status":"ERROR",
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="log-global-error" doc:id="abcf8d86-ab5e-43df-8559-f0b3508a6c97" config-ref="json-logger-config" message='#["-----" ++ upper("log-global-error") ++ "-----"]' tracePoint="EXCEPTION" priority="ERROR">
+				<json-logger:content ><![CDATA[#[output application/json
+---
+payload]]]></json-logger:content>
+			</json-logger:logger>
+		</on-error-propagate>
+	</error-handler>	
+</mule>

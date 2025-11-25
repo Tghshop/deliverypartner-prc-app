@@ -1,0 +1,22 @@
+[
+  {
+    "orderId": "ORD2001",
+    "customerId": "CUST101",
+    "partnerId": "DP1001",
+    "productId": "PROD501",
+    "orderStatus": "In Transit",
+    "orderDate": "2025-10-25T10:30:00Z",
+    "deliveryAddress": "12, MG Road, Hyderabad",
+    "totalPrice": 4800
+  },
+  {
+    "orderId": "ORD2002",
+    "customerId": "CUST102",
+    "partnerId": "DP1001",
+    "productId": "PROD502",
+    "orderStatus": "Delivered",
+    "orderDate": "2025-10-24T09:00:00Z",
+    "deliveryAddress": "5, Jubilee Hills, Hyderabad",
+    "totalPrice": 3100
+  }
+]

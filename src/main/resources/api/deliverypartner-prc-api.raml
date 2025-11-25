@@ -1,0 +1,72 @@
+#%RAML 1.0
+title: deliverypartner-prc-api
+version: v1
+documentation:
+  - title: Delivery Partner Process API
+    content: Handles retrieval of delivery partner details and their assigned orders by orchestrating data from Salesforce System APIs.
+
+traits:
+  errResponse: !include /exchange_modules/452f3798-822a-44ef-87e5-4e40034054da/trait-error-response/1.0.0/trait-error-response.raml
+
+
+/api:
+  /v1:
+    /deliveryPartners:
+      is: [errResponse]
+      get:
+          description: Retrieve all delivery partners from Salesforce
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include /Examples/getAllDeliveryPartners.json
+
+      post:
+        description: Create a new delivery partner
+        body:
+          application/json:
+            example: !include Examples/deliveryPartnerPostRequest.json
+        responses:
+          201:
+            body:
+              application/json:
+                example: !include Examples/deliveryPartnerPostResponse.json
+
+      /{partnerId}:
+        uriParameters:
+          partnerId:
+            type: string
+            description: Unique partner ID in Salesforce.
+        get:
+          description: Retrieve delivery partner details from Salesforce
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include /Examples/getDeliveryPartnerDetails.json
+
+        put:
+          description: Update a specific delivery partner record
+          body:
+            application/json:
+              example: !include Examples/deliveryPartnerPutRequest.json
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include Examples/deliveryPartnerPutResponse.json
+
+        delete:
+          description: Delete a specific customer record
+          body:
+            application/json:
+              example: !include Examples/deliveryPartnerDeleteResponse.json  
+              
+        /orders:
+          get:
+            description: Retrieve all orders assigned to the delivery partner from Salesforce
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: !include /Examples/getAssignedOrders.json

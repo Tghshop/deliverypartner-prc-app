@@ -1,0 +1,18 @@
+[
+  {
+    "partnerId": "DP1001",
+    "name": "Arun Express",
+    "city": "Hyderabad",
+    "contact": "9876543210",
+    "availabilityStatus": "Available",
+    "lastAssigned": "2025-10-25T09:00:00Z"
+  },
+  {
+    "partnerId": "DP1002",
+    "name": "BlueKart Logistics",
+    "city": "Bangalore",
+    "contact": "9988776655",
+    "availabilityStatus": "Busy",
+    "lastAssigned": "2025-10-26T14:00:00Z"
+  }
+]
