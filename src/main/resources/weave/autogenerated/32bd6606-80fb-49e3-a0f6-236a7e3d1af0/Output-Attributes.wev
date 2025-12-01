@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_32bd6606_80fb_49e3_a0f6_236a7e3d1af0_Output_Attributes = {| uriParams: {| partnerId: String |} |}
+

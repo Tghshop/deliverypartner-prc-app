@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="dp-prc-test-suite.xml" />
+	<munit:test name="dp-prc-test-get-partners-data" doc:id="75c29984-07ca-4101-9104-1cecb2decca7" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="728d7792-6006-4a97-b3ff-4dc1cb00aa47" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/get-query-partners-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get:\api\v1\deliveryPartners:deliverypartner-prc-api-config" doc:id="55c5dedb-2a02-4ad2-b8bd-55a3f15a5ef6" name="get:\api\v1\deliveryPartners:deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f3a254cb-aad4-442c-a043-2fefe1b97f77" actual="#[payload]" expected="#[output application/json --- readUrl('classpath://deliveryPartners/get-partners-response.dwl')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="dp-prc-test-get-partner-data" doc:id="97e3c572-9220-4deb-9847-0e4d091b5044" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="a005f0bd-0d86-4f81-a17b-c94fc2cb079e" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/get-query-partner-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="59ea5c57-d368-4249-8cb5-f89dc53f0b91" cloneOriginalEvent="true" >
+				<munit:attributes value="#[{&#10;	uriParams: {&#10;       partnerId: 'DP001'&#10;          }&#10;}]" />
+
+			</munit:set-event>
+			<flow-ref doc:name="get:\api\v1\deliveryPartners\(partnerId):deliverypartner-prc-api-config" doc:id="f8b0eaac-253f-45b9-9230-927a9e4ff1e3" name="get:\api\v1\deliveryPartners\(partnerId):deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3d2c5d87-c9bc-4208-887e-ca066fc7011b" actual="#[payload]" expected="#[output application/json --- readUrl('classpath://deliveryPartners/get-partner-response.dwl')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="dp-prc-test-post-partner-data" doc:id="f5271033-bb10-468b-9d5e-244de38891ed" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="39b78095-abf5-4d96-a6ec-bc7d9912245a" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/post-partner-upsert-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mocking-request-to-mail-sys" doc:id="7a45144c-edee-4e11-a583-292725cd50cb" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-mail-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="4d36274e-bc6a-4fa8-a191-a4b19ab5320f" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/post-mail-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="d879020e-8bd7-4e56-bc8a-4099e6f6c5f9" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/post-partner-request.dwl')]" />
+			</munit:set-event>
+			<flow-ref doc:name="post:\api\v1\deliveryPartners:application\json:deliverypartner-prc-api-config" doc:id="4acfce08-4ee7-4817-833b-2de33ceef133" name="post:\api\v1\deliveryPartners:application\json:deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="1fe1844b-6f11-40f1-8d25-24f25e7e9a26" actual="#[payload.message]" expected="#[output application/json --- readUrl('classpath://deliveryPartners/post-partner-response.dwl').message]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="dp-prc-test-put-partner-data" doc:id="d3a056a8-fbae-447c-a68c-c210435d29b6" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys-query" doc:id="ed195eb4-1e0b-4def-aa2c-959fe7fd747a" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="get-deliverypartner-byid-sub-flow" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="77503bf7-b7de-4604-ae46-15ffec47df3f" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="partner" value="#[output application/json --- readUrl('classpath://deliveryPartners/put-partner-query-response.dwl')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="b534228f-1976-4d1c-ad60-a11513115db9" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/put-partner-upsert-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		
+</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="42484e9f-7372-4874-a7a5-3ae86292fcba" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/put-partner-request.dwl')]" />
+				<munit:attributes value="#[{&#10;	uriParams: {&#10;       partnerId: 'DP004'&#10;          }&#10;}]" />
+			
+</munit:set-event>
+			<flow-ref doc:name="put:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config" doc:id="5e392995-54c2-4e6d-957c-f7fec094132f" name="put:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="43bfef68-0b41-40a2-95e9-bfa0b6d08bc8" actual="#[payload.message]" expected="#[output application/json --- readUrl('classpath://deliveryPartners/put-partner-response.dwl').message]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="dp-prc-test-delete-partner-data" doc:id="f692cb69-b89b-4945-aa17-c0633a19e7bc" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys-query" doc:id="5360e425-5c16-4f79-b077-f886d243b4f1" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="get-deliverypartner-byid-sub-flow" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="2fcd0d7d-8db1-4938-a731-f0b910044e94" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="partner" value="#[output application/json --- readUrl('classpath://deliveryPartners/delete-query-partner-response.dwl')]" mediaType="application/json" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="5cbf08bd-6d87-46ee-8df6-0b7a08762137" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/delete-upsert-partner-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		
+</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="92d159ca-1b0a-40f2-9132-ba50664a1455" cloneOriginalEvent="true" >
+				<munit:attributes value="#[{&#10;	uriParams: {&#10;       partnerId: 'DP004'&#10;          }&#10;}]" />
+
+			</munit:set-event>
+			<flow-ref doc:name="delete:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config" doc:id="23f39a3f-e158-4213-8e32-2bd626f8bf7f" name="delete:\api\v1\deliveryPartners\(partnerId):application\json:deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6be277e6-2c2f-406a-8d5c-401af32e11aa" actual="#[payload]" expected="#[output application/json --- readUrl('classpath://deliveryPartners/delete-partner-response.dwl')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="dp-prc-test-get-partner-orders-data" doc:id="866b4676-e4fa-4140-a55f-38b009145578" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="6174f34a-b7b1-4ee1-8e88-ef76bb092d6a" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="request-to-sf-sys-api" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="498f345a-91ce-4e04-8249-c5d2c5ab1501" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://deliveryPartners/get-partner-orders-response.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		
+</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2b8dbd4c-c5a4-4af3-bd94-d114a5de6466" cloneOriginalEvent="true" >
+				<munit:attributes value="#[{&#10;	uriParams: {&#10;       partnerId: 'a05Qy0000186RMzIAM'&#10;          }&#10;}]" />
+			</munit:set-event>
+			<flow-ref doc:name="get:\api\v1\deliveryPartners\(partnerId)\orders:deliverypartner-prc-api-config" doc:id="93179269-ecd0-436d-b7de-e9da5a69f259" name="get:\api\v1\deliveryPartners\(partnerId)\orders:deliverypartner-prc-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="97037558-49bf-44fa-af54-218bf415ca66" actual='#[""]' expected='#[""]' />
+		</munit:validation>
+	</munit:test>
+</mule>

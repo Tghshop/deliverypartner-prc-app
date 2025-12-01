@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<json-logger:logger doc:name="log-get-deliverypartners-data-sub-flow-start" doc:id="51984497-53d1-4013-9bfd-51ecef500592" config-ref="json-logger-config" message='#["------------" ++ upper("log-get-deliverypartners-data-sub-flow-start") ++ "--------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="8277e924-9a1d-4390-8d91-a560c9258959">
+		<ee:transform doc:name="req-variable" doc:id="8277e924-9a1d-4390-8d91-a560c9258959">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -35,7 +35,7 @@ output application/json
 		<json-logger:logger doc:name="log-get-deliverypartner-byid-sub-flow-start" doc:id="4e8164b0-bf85-49e1-8657-aa2989cd9c54" config-ref="json-logger-config" message='#["------------" ++ upper("log-get-deliverypartner-byid-sub-flow-start") ++ "------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="cc83d890-b4f7-45c7-a528-a3964ae2e22e">
+		<ee:transform doc:name="req-variable" doc:id="cc83d890-b4f7-45c7-a528-a3964ae2e22e">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -63,22 +63,19 @@ output application/json
 		<json-logger:logger doc:name="log-get-orders-partnerbyid-sub-flow-start" doc:id="5c27e657-c9c9-4bb7-87ee-512832fe0bca" config-ref="json-logger-config" message='#["-----------" ++ upper("log-get-orders-partnerbyid-sub-flow-start") ++ "-------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="f0f17bc6-7df1-4eb0-a3af-f8c16bbb22fb">
+		<ee:transform doc:name="req-varaible" doc:id="f0f17bc6-7df1-4eb0-a3af-f8c16bbb22fb">
 			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-vars.requestParams.payload]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
-				<ee:set-variable variableName="sf"><![CDATA[%dw 2.0
+				<ee:set-variable variableName="req" ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	"method": "POST",
+	"method": "GET",
 	"path": "/deliveryPartners/" ++ vars.requestParams.uriParams.partnerId as String default "" ++ "/orders"
 }]]></ee:set-variable>
-			</ee:variables>
+			
+</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="sys-api-call-impl-sub-flow" doc:id="c36b2fda-b0a5-494b-83c9-3d8ea217d004" name="sys-api-call-impl-sub-flow"/>
 		<json-logger:logger doc:name="log-get-orders-partnerbyid-sub-flow-end" doc:id="36d4b22c-c4bb-4d79-8ed6-a8dc5e42bd9f" config-ref="json-logger-config" message='#["-----------" ++ upper("get-orders-partnerbyid-sub-flow-end") ++ "-------------"]' >
@@ -90,7 +87,7 @@ output application/json
 		<json-logger:logger doc:name="log-post-deliverypartner-sub-flow-start" doc:id="6305787b-2f1e-4860-bd30-9fd1647f8503" config-ref="json-logger-config" message='#["-----------" ++ upper("log-post-deliverypartner-sub-flow-start") ++ "-------------"]' >
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="6f5db079-7495-4219-a058-603f11e4b8f3" >
+		<ee:transform doc:name="req-variable" doc:id="6f5db079-7495-4219-a058-603f11e4b8f3" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -127,8 +124,8 @@ output application/json
 {
 	email: vars.requestParams.payload.email,
 	subject: "Welcome to TGHShop – Your Account Has Been Successfully Created",
-	body: "Hello " ++ vars.requestParams.payload.name as String ++ "\n" ++ 
-	"Thank you for signing in to TGHShop.\n" ++ 
+	body: "Hello " ++ vars.requestParams.payload.name as String ++ "\n\n" ++ 
+	"Thank you for signing in to TGHShop.\n\n" ++ 
 	"Your delivery partner profile has been successfully created in our system."
 }]]></ee:set-payload>
 			</ee:message>
@@ -144,7 +141,7 @@ output application/json
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="get-deliverypartner-byid-sub-flow" doc:id="77503bf7-b7de-4604-ae46-15ffec47df3f" name="get-deliverypartner-byid-sub-flow" target="partner"/>
-		<ee:transform doc:name="Transform Message" doc:id="79ad26ef-aebd-4e00-8f4f-445e5d46d368" >
+		<ee:transform doc:name="req-variable" doc:id="79ad26ef-aebd-4e00-8f4f-445e5d46d368" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -184,7 +181,7 @@ output application/json
 			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="get-deliverypartner-byid-sub-flow" doc:id="2fcd0d7d-8db1-4938-a731-f0b910044e94" name="get-deliverypartner-byid-sub-flow" target="partner" />
-		<ee:transform doc:name="Transform Message" doc:id="f46fbb18-542f-432b-8577-a4c6693ef581">
+		<ee:transform doc:name="req-variable" doc:id="f46fbb18-542f-432b-8577-a4c6693ef581">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
